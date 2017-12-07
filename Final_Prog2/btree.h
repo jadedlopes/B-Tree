@@ -3,15 +3,15 @@
 
 typedef struct arvore arvore_t;
 
-arvore_t * grow_tree();
+typedef struct node node_t;
+
+arvore_t * tree_creation();
 
 void insert_tree(void * dado, arvore_t *arvore); // Balanceamento feito dentro da inserção
 
-void * search_tree(void * dado, arvore_t *arvore); // Função de comparação
+void * search_tree(void * dado, arvore_t *arvore);
 
-
-
-
+void free_tree(arvore_t *arvore);
 
 
 #endif // BTREE_H_INCLUDED
