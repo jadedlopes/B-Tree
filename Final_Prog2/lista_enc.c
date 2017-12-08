@@ -97,22 +97,22 @@ void add_cabeca(lista_enc_t *lista, void* elemento){
    }
 }
 
-void* obtem_cabeca(lista_enc_t* lista){
+no_t* obtem_cabeca(lista_enc_t* lista){
     if (lista == NULL){
         fprintf(stderr,"add_cabeca: ponteiros invalidos");
         exit(EXIT_FAILURE);
     }
 
-    return obtem_dado(lista->cabeca);
+    return lista->cabeca;
 }
 
-void* obtem_cauda(lista_enc_t* lista){
+no_t* obtem_cauda(lista_enc_t* lista){
     if (lista == NULL){
         fprintf(stderr,"add_cabeca: ponteiros invalidos");
         exit(EXIT_FAILURE);
     }
 
-    return obtem_dado(lista->cauda);
+    return lista->cauda;
 }
 
 void* remove_cabeca(lista_enc_t *lista){

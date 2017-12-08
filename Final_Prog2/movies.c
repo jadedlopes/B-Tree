@@ -19,7 +19,6 @@ lista_enc_t * ler_arquivo(char *arquivo) {
     char buffer[150];
     char genrebuffer[80];
     movie_t *dados;
-    no_t *no;
     lista_enc_t *lista;
     char * genre;
     lista = cria_lista_enc();
