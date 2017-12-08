@@ -5,7 +5,7 @@ typedef struct arvore arvore_t;
 
 typedef struct node node_t;
 
-arvore_t * tree_creation();
+arvore_t * tree_create(int (*comp)(void*, void*));
 
 void insert_tree(void * dado, arvore_t *arvore); // Balanceamento feito dentro da inserção
 
