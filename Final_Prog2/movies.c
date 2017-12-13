@@ -82,3 +82,36 @@ void libera_movies(lista_enc_t * lista) {
     }
     free(lista);
 }
+
+int title_comp(movie_t* m1, movie_t* m2){
+    int res;
+    res = strcmp(m1->title, m2->title);
+
+    return res;
+}
+
+int year_comp(movie_t* m1, movie_t* m2){
+    int res;
+
+    if (m1->year > m2->year){
+        res = 1;
+    }else if (m1->year < m2->year){
+        res = -1;
+    }else{
+        res = 0;
+    }
+
+    return res;
+}
+
+int id_comp(movie_t* m1, movie_t* m2){
+    int res;
+
+    if (m1->id > m2->id){
+        res = 1;
+    }else{
+        res = -1;
+    }
+
+    return res;
+}

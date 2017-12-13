@@ -3,7 +3,7 @@
 
 typedef struct arvore arvore_t;
 
-typedef struct node node_t;
+typedef struct btNode btNode_t;
 
 arvore_t * tree_create(int (*comp)(void*, void*));
 
