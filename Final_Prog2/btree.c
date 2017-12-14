@@ -4,19 +4,20 @@
 #define ORDER 3         // Definimos que a ordem da árvore é 3
 
 struct arvore {
-    node_t * raiz;
+    btNode_t * raiz;
     int (*comp)(void *, void *);    // Ponteiro para a função de comparação (recebe como argumento um void*, pois não sabemos o que ela vai receber)
+    int (*comp_search) (void *, void *); // Ponteiro para função de comparação para pesquisa na arvore
 };
 
 struct btNode {
     int n;               // n é a quantidade de chaves que o nó possui
     void * key[ORDER - 1];
-    node_t * p[ORDER];  // p[ORDER] são as ligações dos filhos
-    node_t * pai;
+    btNode_t * p[ORDER];  // p[ORDER] são as ligações dos filhos
+    btNode_t * pai;
     int leaf;         //0 = false / 1 = true
 };
 
-arvore_t * tree_create(int(*c)(void *, void *)) {
+arvore_t * tree_create(int(*c)(void *, void *), int (*c_s)(void *, void *)) {
 
     arvore_t * arvore;
 
@@ -26,29 +27,31 @@ arvore_t * tree_create(int(*c)(void *, void *)) {
 
     arvore->comp = c;
 
+    arvore->comp_search = c_s;
+
     return arvore;
 }
 
-btNode_t tree_node_create(){
-    btNode_t bn;
+/*btNode_t tree_node_create(){
+    btNode_t tNode;
     int i;
 
-    bn->n = 0;
-    bn->pai = NULL;
-    for (i = 0, i<ORDER; i++){
-        m->p[i] = NULL;
+    tNode->n = 0;
+    tNode->pai = NULL;
+    for (i = 0; i<ORDER; i++){
+        tNode->p[i] = NULL;
     }
-    bn->leaf = 0;
+    tNode->leaf = 0;
 
-    return bn;
-}
+    return tNode;
+}*/
 
 
 static int searchKey (btNode_t* btn, void* data, arvore_t* tree){
     int i;
 
      for (i = 0; i < btn->n; i++){
-        if (tree->comp() == 0){
+        if (tree->comp(data, btn->key[i]) == 0){
             break;
         }
      }

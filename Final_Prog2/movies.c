@@ -90,6 +90,20 @@ int title_comp(movie_t* m1, movie_t* m2){
     return res;
 }
 
+int title_search_comp(char* str, movie_t* m){
+    char* aux;
+    int ret;
+
+    aux = malloc(strlen(str) + 1);
+    strcpy(aux, m->title);
+    aux[strlen(str)+1] = '\0';
+    ret = strcmp(str, aux);
+    free(aux);
+
+    return ret;
+
+}
+
 int year_comp(movie_t* m1, movie_t* m2){
     int res;
 
@@ -104,13 +118,33 @@ int year_comp(movie_t* m1, movie_t* m2){
     return res;
 }
 
+int year_search_comp(int year, movie_t* m){
+    if (year < 100){
+        if (year > 17){
+            year = year + 1900;
+        }else{
+            year = year + 2000;
+        }
+    }
+
+    if (year > m->year){
+        return 1;
+    }else if (year < m->year){
+        return -1;
+    }else{
+        return 0;
+    }
+}
+
 int id_comp(movie_t* m1, movie_t* m2){
     int res;
 
     if (m1->id > m2->id){
         res = 1;
-    }else{
+    }else if(m1->id < m2->id){
         res = -1;
+    }else{
+        res = 0;
     }
 
     return res;
