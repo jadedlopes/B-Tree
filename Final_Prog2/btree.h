@@ -7,7 +7,9 @@ typedef struct btNode btNode_t;
 
 arvore_t * tree_create(int(*c)(void *, void *), int (*c_s)(void *, void *));
 
-void insert_tree(void * dado, arvore_t *arvore); // Balanceamento feito dentro da inserção
+btNode_t* tree_node_create();
+
+void insert_tree (void* data, arvore_t* tree); // Balanceamento feito dentro da inserção
 
 void * search_tree(void * dado, arvore_t *arvore);
 

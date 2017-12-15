@@ -149,3 +149,38 @@ int id_comp(movie_t* m1, movie_t* m2){
 
     return res;
 }
+
+void print_list_movies(lista_enc_t* lista, int size){
+    movie_t* m;
+    no_t* no;
+    char str[40];
+    int i = 0;
+
+    no = obtem_cabeca(lista);
+    while (no){
+        m = obtem_dado(no);
+        print_movie(m);
+
+        no = obtem_proximo(no);
+        if (size != NULL && i >= size){
+            break;
+        }
+    }
+
+}
+
+void print_movie(movie_t m){
+    no_t* no;
+    char* aux;
+
+    printf("Id: %d |Title: %s |Year: %d |Genres: ", &m->id, m->title, &m->year);
+
+    no = obtem_cabeca(m->genres);
+    while(no){
+        aux = obtem_dado(no);
+        printf("%s ", aux);
+
+        no = obtem_proximo(no);
+    }
+    printf("\n");
+}
