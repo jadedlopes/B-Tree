@@ -7,19 +7,20 @@ lista_enc_t * ler_arquivo(char *arquivo);
 
 void libera_movies(lista_enc_t * lista);
 
-int title_comp(movie_t* m1, movie_t* m2);
+int title_comp(void* v1, void* v2);
 
-int title_search_comp(char* str, movie_t* m);
+int title_search_comp(void* t_string, void* v);
 
-int year_comp(movie_t* m1, movie_t* m2);
+int year_comp(void* v1, void* v2);
 
-int year_search_comp(int year, movie_t* m);
+int year_search_comp(void* y, void* v);
 
-int id_comp(movie_t* m1, movie_t* m2);
+int id_comp(void* v1, void* v2);
 
 void print_list_movies(lista_enc_t* lista, int size);
 
 void print_movie(movie_t* m);
 
+char* get_title(movie_t* m);
 
 #endif // MOVIES_H_INCLUDED
