@@ -54,7 +54,7 @@ lista_enc_t * ler_arquivo(char *arquivo) {
                 strcpy(genre, genrebuffer + j);
                 j = i+1;
                 printf("ahhhhhh: %s\n", genre);
-                add_cauda(dados->genres, genre);
+                add_cauda(dados->genres, cria_no(genre));
             }
             i++;
         }
@@ -64,9 +64,9 @@ lista_enc_t * ler_arquivo(char *arquivo) {
             exit(EXIT_FAILURE);
         }
         strcpy(genre, genrebuffer + j);
-        add_cauda(dados->genres, genre);
+        add_cauda(dados->genres, cria_no(genre));
 
-        add_cauda(lista, dados);
+        add_cauda(lista, cria_no(dados));
     }
     fclose(fp);
     return lista;
@@ -78,14 +78,14 @@ void libera_movies(lista_enc_t * lista) {
     char * g;
     no_t *no;
 
-    no = obtem_cabeca(lista);
+    no = obter_cabeca(lista);
     no_t * no_prox, *no_genre, *no_genre_prox;
 
     while (no) {
-        dados = obtem_dado(no);
-        no_genre = obtem_cabeca(dados->genres);
+        dados = obter_dado(no);
+        no_genre = obter_cabeca(dados->genres);
         while (no_genre) {
-            g = obtem_dado(no_genre);
+            g = obter_dado(no_genre);
             no_genre_prox = obtem_proximo(no_genre);
             free(g);
             free(no_genre);
@@ -177,16 +177,16 @@ int id_comp(void* v1, void* v2){
     return res;
 }
 
-void print_list_movies(lista_enc_t* lista, int size){
+/*void print_list_movies(lista_enc_t* lista, int size){
     movie_t* m;
     no_t* no;
     int i = 0;
 
-    if (size> tamanho(lista) || size <= 0){
+    if (size > tamanho(lista) || size <= 0){
         size = tamanho(lista);
     }
 
-    no = obtem_cabeca(lista);
+    no = obter_cabeca(lista);
     for(i = 0; i < size; i++){
         m = obtem_dado(no);
         print_movie(m);
@@ -194,7 +194,7 @@ void print_list_movies(lista_enc_t* lista, int size){
         no = obtem_proximo(no);
     }
 
-}
+}*/
 
 void print_movie(movie_t* m){
     no_t* no;
@@ -202,9 +202,9 @@ void print_movie(movie_t* m){
 
     printf("Id: %ld |Title: %s |Year: %d |Genres: ", m->id, m->title, m->year);
 
-    no = obtem_cabeca(m->genres);
+    no = obter_cabeca(m->genres);
     while(no){
-        aux = obtem_dado(no);
+        aux = obter_dado(no);
         printf("%s ", aux);
 
         no = obtem_proximo(no);

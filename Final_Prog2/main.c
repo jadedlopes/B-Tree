@@ -25,15 +25,14 @@ int main()
 
     lista = ler_arquivo("movies.csv");
 
-    no = obtem_cabeca(lista);
+   /* no = obtem_cabeca(lista);
     while(no){
         insert_tree(obtem_dado(no), tree_title);
 
         no = obtem_proximo(no);
     }
-
+*/
     //print_list_movies(lista, 10);
-
 
     while(1) {
 #ifdef _WIN32
@@ -66,7 +65,6 @@ int main()
 
             fila = search_tree(nome, tree_title);
 
-
             break;
 
         case 2:
@@ -76,7 +74,7 @@ int main()
             system("clear");
 #endif
             printf("Digite o ano do filme desejado: ");
-            scanf("%d", ano);
+            scanf("%d", &ano);
 
             fila = search_tree(ano, tree_title);
 
