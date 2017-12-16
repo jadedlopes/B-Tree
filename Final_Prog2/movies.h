@@ -17,5 +17,9 @@ int year_search_comp(int year, movie_t* m);
 
 int id_comp(movie_t* m1, movie_t* m2);
 
+void print_list_movies(lista_enc_t* lista, int size);
+
+void print_movie(movie_t* m);
+
 
 #endif // MOVIES_H_INCLUDED

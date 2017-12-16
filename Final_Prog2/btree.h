@@ -15,5 +15,6 @@ void * search_tree(void * dado, arvore_t *arvore);
 
 void free_tree(arvore_t *arvore);
 
+void print_dot (btNode_t* node, FILE* arquivo, char*(*title_func)(void*));
 
 #endif // BTREE_H_INCLUDED

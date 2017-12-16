@@ -5,6 +5,8 @@
 #include "no.h"
 #include "movies.h"
 
+#define DEBUG
+
 struct movies {
     char title[80];
     lista_enc_t * genres;
@@ -20,7 +22,7 @@ lista_enc_t * ler_arquivo(char *arquivo) {
     char genrebuffer[80];
     movie_t *dados;
     lista_enc_t *lista;
-    char * genre;
+    char* genre;
     lista = cria_lista_enc();
 
     FILE *fp = fopen(arquivo, "r");
@@ -30,26 +32,40 @@ lista_enc_t * ler_arquivo(char *arquivo) {
         exit(EXIT_FAILURE);
     }
 
-    fgets(buffer, 150, fp);
-
     while(fgets(buffer, 150, fp) != NULL) {
         i = 0;
         j = 0;
-        dados = malloc(sizeof(struct movies));
+        dados = (movie_t*)malloc(sizeof(struct movies));
+        if (!dados){
+            perror("movies.c: ler_arquivo -> malloc ");
+            exit(EXIT_FAILURE);
+        }
         sscanf(buffer, "%ld, %50[^(](%d),%[^\n]", &dados->id, dados->title, &dados->year, genrebuffer);
         dados->genres = cria_lista_enc();   // Criando uma lista para os gêneros de cada filme
+
         while(genrebuffer[i] != '\0') { // Lógica para pegar cada gênero do filme da lista, que estão dividos pelo carácter '|'
             if(genrebuffer[i] == '|') {
                 genrebuffer[i] = '\0';
                 genre = malloc(strlen((genrebuffer + j) + 1));     // + 1 para caber o '\0'
+                if (!genre){
+                    perror("movies.c: ler_arquivo -> malloc ");
+                    exit(EXIT_FAILURE);
+                }
                 strcpy(genre, genrebuffer + j);
                 j = i+1;
+                printf("ahhhhhh: %s\n", genre);
                 add_cauda(dados->genres, genre);
             }
             i++;
         }
         genre = malloc(strlen((genrebuffer + j) + 1));
+        if (!genre){
+            perror("movies.c: ler_arquivo -> malloc ");
+            exit(EXIT_FAILURE);
+        }
         strcpy(genre, genrebuffer + j);
+        add_cauda(dados->genres, genre);
+
         add_cauda(lista, dados);
     }
     fclose(fp);
@@ -153,27 +169,27 @@ int id_comp(movie_t* m1, movie_t* m2){
 void print_list_movies(lista_enc_t* lista, int size){
     movie_t* m;
     no_t* no;
-    char str[40];
     int i = 0;
 
+    if (size> tamanho(lista) || size <= 0){
+        size = tamanho(lista);
+    }
+
     no = obtem_cabeca(lista);
-    while (no){
+    for(i = 0; i < size; i++){
         m = obtem_dado(no);
         print_movie(m);
 
         no = obtem_proximo(no);
-        if (size != NULL && i >= size){
-            break;
-        }
     }
 
 }
 
-void print_movie(movie_t m){
+void print_movie(movie_t* m){
     no_t* no;
     char* aux;
 
-    printf("Id: %d |Title: %s |Year: %d |Genres: ", &m->id, m->title, &m->year);
+    printf("Id: %ld |Title: %s |Year: %d |Genres: ", m->id, m->title, m->year);
 
     no = obtem_cabeca(m->genres);
     while(no){
