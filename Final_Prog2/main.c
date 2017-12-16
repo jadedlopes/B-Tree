@@ -93,6 +93,9 @@ int main()
             break;
         }
 
+        libera_movies(lista);
+        free(tree_title);
+
     return 0;
     }
 }

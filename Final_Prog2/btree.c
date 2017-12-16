@@ -369,8 +369,23 @@ void print_dot (btNode_t* node, FILE* arquivo, char*(*title_func)(void*)) {
     }
 }
 
-void libera_tree(arvore_t * tree) {
+void free_nodes(btNode_t* node)
+{
+    if(node->leaf) {
+        free(node);
+        return;
+    }
 
+    int i;
+    for(i = 0; i <= node->n; i++) {
+        free_nodes(node->p[i]);
+    }
+    free(node);
+}
 
-
+void free_tree(arvore_t * tree){
+     if(tree->raiz != NULL) {
+        free_nodes(tree->raiz);
+    }
+    free(tree);
 }
