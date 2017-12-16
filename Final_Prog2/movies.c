@@ -22,6 +22,7 @@ lista_enc_t * ler_arquivo(char *arquivo) {
     char genrebuffer[80];
     movie_t *dados;
     lista_enc_t *lista;
+    no_t * no;
     char* genre;
     lista = cria_lista_enc();
 
@@ -53,8 +54,9 @@ lista_enc_t * ler_arquivo(char *arquivo) {
                 }
                 strcpy(genre, genrebuffer + j);
                 j = i+1;
-                printf("ahhhhhh: %s\n", genre);
-                add_cauda(dados->genres, cria_no(genre));
+                //printf("genero: %s\n", genre);
+                no = cria_no(genre);
+                add_cauda(dados->genres, no);
             }
             i++;
         }

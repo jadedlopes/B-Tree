@@ -65,6 +65,12 @@ int main()
 
             fila = search_tree(nome, tree_title);
 
+            while(!fila_vazia(fila))
+            {
+                dequeue(fila);
+            }
+            libera_fila(fila);
+
             break;
 
         case 2:
@@ -76,7 +82,13 @@ int main()
             printf("Digite o ano do filme desejado: ");
             scanf("%d", &ano);
 
-            fila = search_tree(ano, tree_title);
+            fila = search_tree((void*)ano, tree_title);
+
+            while(!fila_vazia(fila))
+            {
+                dequeue(fila);
+            }
+            libera_fila(fila);
 
             break;
         }

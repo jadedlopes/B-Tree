@@ -366,6 +366,11 @@ void print_dot (btNode_t* node, FILE* arquivo, char*(*title_func)(void*)) {
         if (!node->pai) {
             fputs("}", arquivo);
         }
-
     }
+}
+
+void libera_tree(arvore_t * tree) {
+
+
+
 }
