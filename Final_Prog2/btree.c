@@ -193,7 +193,7 @@ void insert_tree (void* data, arvore_t* tree) {
     return;
 
 }
-
+//apenas insere no no se couber
 static void insert_node (void* data, btNode_t* right, btNode_t*  btn, int pos) {
     int i;
 
@@ -206,7 +206,7 @@ static void insert_node (void* data, btNode_t* right, btNode_t*  btn, int pos) {
 
     if (!btn->leaf) {
         pos++;
-        for(i = btn->n+1; i-- > pos;) {
+        for(i = btn->n+1; i-- >pos;) {
             btn->p[i+1] = btn->p[i];
         }
 
@@ -244,17 +244,26 @@ static btNode_t* split_node(btNode_t* btn, void* data, arvore_t* tree) {
     btn2 = tree_node_create();
 
     btn2->n = btn->n -1;
+    btn->n = btn->n -1;
     btn2->leaf = btn->leaf;
     btn2->pai = btn->pai;
 
     btn2->key[0] = btn->key[1];
-    if (!btn->leaf) {
-        for (i = 0; i < btn2->n; i++) {
-            btn2->p[i] = btn->p[i+1];
+    if (!btn->leaf) { //achei o erro
+        for (i = btn->n+1; i >= 2; i++) {
+            btn2->p[i-btn->n] = btn->p[i];
+            btn2->p[i-btn->n]->pai = btn2;
         }
     }
 
-    btn->n = btn->n -1;
+    insert_node(data, btn2, btn, 1);
+
+    if(!btn2->leaf){
+        btn2->p[0] = btn->p[btn->n];
+        btn2->p[0]->pai = btn2;
+    }
+
+    data = btn->key[--btn->n];
 
     return btn2;
 }
@@ -271,4 +280,18 @@ static int median (btNode_t* btn, void* data, arvore_t* tree) {
     } else {
         return 1;
     }
+}
+
+void free_nodes(btNode_t* node)
+{
+    if(node->leaf) {
+        free(node);
+        return;
+    }
+
+    int i;
+    for(i = 0; i <= node->n; i++) {
+        free_nodes(node->p[i]);
+    }
+    free(node);
 }
