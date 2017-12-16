@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "btree.h"
+#include "fila.h"
+#include "lista_enc.h"
+#include "no.h"
 #define ORDER 3         // Definimos que a ordem da árvore é 3
 
 /*------------ Private function declaration ------------------- */
@@ -10,6 +13,7 @@ static void insert_node (void* data, btNode_t* right, btNode_t*  btn, int pos);
 static btNode_t* split_node(btNode_t* btn, void* data, arvore_t* tree);
 static int median (btNode_t* btn, void* data, arvore_t* tree);
 static btNode_t* go_to_leaf(btNode_t* node, void* data, arvore_t* tree);
+static btNode_t * nodePrev(btNode_t * btn, int * k);
 /*------------------------------------------------------------- */
 
 
@@ -63,6 +67,9 @@ btNode_t* tree_node_create() {
     return tNode;
 }
 
+<<<<<<< HEAD
+// devolve a posição a ser inserido o dado ou para qual filho ir
+=======
 /*------- Get tree status ----------*/
 int get_treeNode_size (btNode_t* node){
     if (!node){
@@ -121,6 +128,7 @@ btNode_t* get_tree_root (arvore_t* tree){
 /*----------------------------------*/
 
 // devolve a posição a ser inserrido o dado ou para qual filho ir
+>>>>>>> f5e192f04d11c02c2820179ca4cd0222176c296b
 static int searchKey (btNode_t* btn, void* data, arvore_t* tree) {
     int i;
 
@@ -129,7 +137,6 @@ static int searchKey (btNode_t* btn, void* data, arvore_t* tree) {
             break;
         }
     }
-
     return i;
 }
 
@@ -148,16 +155,16 @@ void insert_tree (void* data, arvore_t* tree) {
             insert_node(data, NULL, btn, pos);
             finished = 1;
         } else {
-            while(1) {
+            while(1) {      // Se não tiver espaço
                 right = split_node(btn, data, tree);
 
-                if (btn->pai == NULL) {
+                if (btn->pai == NULL) {     // Se não tiver pai é porque é a raiz; logo, sai do while(1)
                     break;
                 } else {
                     btn = btn->pai;
                 }
 
-                if(btn->n < ORDER-1) {
+                if(btn->n < ORDER-1) {      // Checar se o pai tem espaço
                     pos = searchKey(btn, data, tree);
                     insert_node(data, right, btn, pos);
                     finished = 1;
@@ -191,7 +198,6 @@ void insert_tree (void* data, arvore_t* tree) {
     tree->raiz = btn;
 
     return;
-
 }
 //apenas insere no no se couber
 static void insert_node (void* data, btNode_t* right, btNode_t*  btn, int pos) {
@@ -215,6 +221,118 @@ static void insert_node (void* data, btNode_t* right, btNode_t*  btn, int pos) {
     }
 
     btn->n++;
+}
+
+static btNode_t * keyPrev(btNode_t * btn, int * k)
+{
+	int i;
+	btNode_t * pai;
+
+	if(btn->p[*k]) {
+		btn = btn->p[*k];
+		while(btn->p[btn->n]) {
+			btn = btn->p[btn->n];
+		}
+		*k = btn->n-1;
+		return btn;
+	}
+
+	if(*k > 0) {
+		*k--;
+		return btn;
+	}
+
+	while(*k == 0) {
+
+		if(btn->pai == NULL) {
+			return NULL;
+		}
+		if(btn == btn->pai->p[0]) {
+			btn = btn->pai;
+		}
+		else {
+			pai = btn->pai;
+			for(i = 1; btn != pai->p[i]; i++);
+			btn = pai;
+			*k = i - 1;
+			break;
+		}
+	}
+
+	return btn;
+}
+
+static btNode_t * keyNext(btNode_t * btn, int * k)
+{
+	int i;
+	btNode_t * pai;
+
+	if(btn->p[*k+1]) {
+		btn = btn->p[*k+1];
+		while(btn->p[0]) {
+			btn = btn->p[0];
+		}
+		*k = 0;
+		return btn;
+	}
+
+	if(*k < btn->n - 1) {
+		*k++;
+		return btn;
+	}
+
+	while(*k == btn->n - 1) {
+
+		if(btn->pai == NULL) {
+			return NULL;
+		}
+		if(btn == btn->pai->p[btn->n]) {
+			btn = btn->pai;
+		}
+		else {
+			pai = btn->pai;
+			for(i = btn->n; btn != pai->p[i]; i--);
+			btn = pai;
+			*k = i;
+			break;
+		}
+	}
+
+	return btn;
+}
+
+fila_t * search_tree(void * data, arvore_t * tree) {
+
+    btNode_t * btn;
+    fila_t * fila;
+    fila = cria_fila();
+    int i;
+    int found = 0;
+
+    if(tree->raiz == NULL) {
+        return NULL;
+    }
+
+    btNode_t * bnt = tree->raiz;
+
+    for(i = 0; i < btn->n; i++) {
+        if(tree->comp(data, btn->key[i]) == 0) {
+            found = 1;
+        }
+
+        else if(tree->comp(data, btn->key[i]) < 0) {        //nos prox coloca na fila
+            btn = keyPrev(btn, &i);
+
+        }
+
+        else(tree->comp(data, btn->key[i]) > 0) {
+
+
+
+        }
+    }
+
+
 }
 
 static btNode_t* go_to_leaf(btNode_t* node, void* data, arvore_t* tree) {
