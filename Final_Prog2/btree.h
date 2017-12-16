@@ -1,5 +1,6 @@
 #ifndef BTREE_H_INCLUDED
 #define BTREE_H_INCLUDED
+#include "fila.h"
 
 typedef struct arvore arvore_t;
 
@@ -11,7 +12,7 @@ btNode_t* tree_node_create();
 
 void insert_tree (void* data, arvore_t* tree); // Balanceamento feito dentro da inserção
 
-void * search_tree(void * dado, arvore_t *arvore);
+fila_t* search_tree(void * data, arvore_t *arvore);
 
 void free_tree(arvore_t *arvore);
 
