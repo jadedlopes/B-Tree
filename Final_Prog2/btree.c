@@ -64,7 +64,7 @@ btNode_t* tree_node_create() {
 }
 
 // devolve a posição a ser inserrido o dado ou para qual filho ir
-int searchKey (btNode_t* btn, void* data, arvore_t* tree) {
+static int searchKey (btNode_t* btn, void* data, arvore_t* tree) {
     int i;
 
     for (i = 0; i < btn->n; i++) {
@@ -213,33 +213,5 @@ static int median (btNode_t* btn, void* data, arvore_t* tree) {
         return 0;
     } else {
         return 1;
-    }
-}
-
-void print_dot (btNode_t* node, FILE* arquivo, char*(*title_func)(void*)) {
-    if (node) {
-        if (!node->pai) {
-            fputs("graph{", arquivo);
-        }
-
-        fprintf(arquivo, "n%p [label=%s", node, title_func(node->key[0]));
-        if (node->n > 1) {
-            fprintf(arquivo, " %s];\n", title_func(node->key[1]));
-        } else {
-            fputs("];", arquivo);
-        }
-
-        if(node->pai) {
-            fprintf(arquivo,"%p -- %p;\n", node, node->pai);
-        }
-
-        print_dot(node->p[0], arquivo, title_func);
-        print_dot(node->p[1], arquivo, title_func);
-        print_dot(node->p[3], arquivo, title_func);
-
-        if (!node->pai) {
-            fputs("}", arquivo);
-        }
-
     }
 }

@@ -21,5 +21,6 @@ void print_list_movies(lista_enc_t* lista, int size);
 
 void print_movie(movie_t* m);
 
+char* get_title(movie_t* m);
 
 #endif // MOVIES_H_INCLUDED

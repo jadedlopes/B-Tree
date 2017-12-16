@@ -200,3 +200,12 @@ void print_movie(movie_t* m){
     }
     printf("\n");
 }
+
+char* get_title(movie_t* m){
+    if (!m){
+        perror("movies.c: get_title -> ponteiro invalida");
+        exit(EXIT_FAILURE);
+    }
+
+    return m->title;
+}
