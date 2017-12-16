@@ -6,6 +6,7 @@
 struct nos{
     void* dados;
     no_t *proximo;
+    no_t *anterior;
 };
 
 // Cria um novo no
@@ -20,6 +21,7 @@ no_t *cria_no(void *dado)
 
     p->dados = dado;
     p->proximo = NULL;
+    p->anterior = NULL;
 
     return p;
 }
@@ -32,6 +34,7 @@ void liga_nos (no_t *fonte, no_t *destino)
     }
 
     fonte->proximo = destino;
+    destino->anterior = fonte;
 }
 
 void desliga_no (no_t *no)
@@ -42,9 +45,31 @@ void desliga_no (no_t *no)
     }
 
     no->proximo = NULL;
+    no->anterior = NULL;
 }
 
-void *obtem_dado (no_t *no)
+void desliga_no_anterior (no_t *no)
+{
+    if (no == NULL) {
+        fprintf(stderr,"liga_nos: ponteiros invalidos");
+        exit(EXIT_FAILURE);
+    }
+
+    no->anterior = NULL;
+}
+
+void desliga_no_proximo (no_t *no)
+{
+    if (no == NULL) {
+        fprintf(stderr,"liga_nos: ponteiros invalidos");
+        exit(EXIT_FAILURE);
+    }
+
+    no->proximo = NULL;
+}
+
+
+void *obter_dado (no_t *no)
 {
     if (no == NULL) {
         fprintf(stderr,"liga_nos: ponteiros invalidos");
@@ -62,4 +87,14 @@ no_t *obtem_proximo (no_t *no)
     }
 
     return no->proximo;
+}
+
+no_t *obtem_anterior (no_t *no)
+{
+    if (no == NULL) {
+        fprintf(stderr,"liga_nos: ponteiros invalidos");
+        exit(EXIT_FAILURE);
+    }
+
+    return no->anterior;
 }

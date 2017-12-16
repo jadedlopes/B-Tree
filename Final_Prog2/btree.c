@@ -67,68 +67,7 @@ btNode_t* tree_node_create() {
     return tNode;
 }
 
-<<<<<<< HEAD
 // devolve a posição a ser inserido o dado ou para qual filho ir
-=======
-/*------- Get tree status ----------*/
-int get_treeNode_size (btNode_t* node){
-    if (!node){
-        perror("btree: get_treeNode_size -> ponteiro invalido");
-        exit(EXIT_FAILURE);
-    }
-
-    return node->n;
-}
-
-void* get_treeNode_key (btNode_t* node, int pos){
-    if (!node){
-        perror("btree: get_treeNode_key -> ponteiro invalido");
-        exit(EXIT_FAILURE);
-    }
-
-    return node->key[pos];
-}
-
-btNode_t* get_treeNode_child (btNode_t* node, int pos){
-    if (!node){
-        perror("btree: get_treeNode_child -> ponteiro invalido");
-        exit(EXIT_FAILURE);
-    }
-
-    return node->p[pos];
-}
-
-btNode_t* get_treeNode_father (btNode_t* node){
-    if (!node){
-        perror("btree: get_treeNode_father -> ponteiro invalido");
-        exit(EXIT_FAILURE);
-    }
-
-    return node->pai;
-}
-
-int get_treeNode_leaf (btNode_t* node){
-    if (!node){
-        perror("btree: get_treeNode_father -> ponteiro invalido");
-        exit(EXIT_FAILURE);
-    }
-
-    return node->leaf;
-}
-
-btNode_t* get_tree_root (arvore_t* tree){
-    if (!tree){
-        perror("btree: get_treeNode_father -> ponteiro invalido");
-        exit(EXIT_FAILURE);
-    }
-
-    return tree->raiz;
-}
-
-/*----------------------------------*/
-
-// devolve a posição a ser inserrido o dado ou para qual filho ir
->>>>>>> f5e192f04d11c02c2820179ca4cd0222176c296b
 static int searchKey (btNode_t* btn, void* data, arvore_t* tree) {
     int i;
 
@@ -145,7 +84,7 @@ void insert_tree (void* data, arvore_t* tree) {
     btNode_t *btn;
     btNode_t *right = NULL;
     btNode_t *p;
-    int pos, finished = 0;
+    int pos, finished;
 
     if(tree->raiz) {
         btn = go_to_leaf(tree->raiz, data, tree);
@@ -315,24 +254,36 @@ fila_t * search_tree(void * data, arvore_t * tree) {
 
     btNode_t * bnt = tree->raiz;
 
-    for(i = 0; i < btn->n; i++) {
-        if(tree->comp(data, btn->key[i]) == 0) {
-            found = 1;
-        }
+    while(!found){
+            if (btn == NULL){
+                return NULL;
+            }
+        for(i = 0; i < btn->n; i++) {
+            if(tree->comp(data, btn->key[i]) == 0) {
+                found = 1;
+                break;
+            }
 
-        else if(tree->comp(data, btn->key[i]) < 0) {        //nos prox coloca na fila
-            btn = keyPrev(btn, &i);
-
-        }
-
-        else(tree->comp(data, btn->key[i]) > 0) {
-
-
-
+        else if(tree->comp(data, btn->key[i]) < 0) {
+            i = searchKey(btn, data, tree);
+            btn = btn->p[i];
+            break;
+            }
         }
     }
 
+    while(tree->comp(data, btn->key[i]) == 0){
+        btn = keyPrev(btn, &i);
+    }
 
+    btn = keyNext(btn, &i);
+
+    while(tree->comp(data, btn->key[i]) == 0){
+        enqueue(btn->key[i], fila);
+        keyNext(btn, &i);
+    }
+
+    return fila;
 }
 
 static btNode_t* go_to_leaf(btNode_t* node, void* data, arvore_t* tree) {
@@ -388,5 +339,33 @@ static int median (btNode_t* btn, void* data, arvore_t* tree) {
         return 0;
     } else {
         return 1;
+    }
+}
+
+void print_dot (btNode_t* node, FILE* arquivo, char*(*title_func)(void*)) {
+    if (node) {
+        if (!node->pai) {
+            fputs("graph{", arquivo);
+        }
+
+        fprintf(arquivo, "n%p [label=%s", node, title_func(node->key[0]));
+        if (node->n > 1) {
+            fprintf(arquivo, " %s];\n", title_func(node->key[1]));
+        } else {
+            fputs("];", arquivo);
+        }
+
+        if(node->pai) {
+            fprintf(arquivo,"%p -- %p;\n", node, node->pai);
+        }
+
+        print_dot(node->p[0], arquivo, title_func);
+        print_dot(node->p[1], arquivo, title_func);
+        print_dot(node->p[3], arquivo, title_func);
+
+        if (!node->pai) {
+            fputs("}", arquivo);
+        }
+
     }
 }

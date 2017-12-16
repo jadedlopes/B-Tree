@@ -3,26 +3,22 @@
 
 #include "no.h"
 
-typedef struct lista_enc lista_enc_t;
+typedef struct listas_enc lista_enc_t;
 
-lista_enc_t* cria_lista_enc (void);
+lista_enc_t *cria_lista_enc(void);
+void add_cauda(lista_enc_t *lista, no_t* elemento);
+no_t *obter_cabeca(lista_enc_t *lista);
+int lista_vazia(lista_enc_t *lista);
 
-void add_cauda(lista_enc_t *lista, void* elemento);
+no_t *remover_cauda(lista_enc_t *lista);
+no_t *remover_cabeca(lista_enc_t *lista);
 
-void add_cabeca(lista_enc_t *lista, void* elemento);
+void imprimi_lista (lista_enc_t *lista);
+void imprimi_lista_tras (lista_enc_t *lista);
 
-no_t* obtem_cabeca(lista_enc_t* lista);
+/* Retorna o dado de um no removido*
+ * no_removido é liberado da memoória  */
+void *remover_no(lista_enc_t *lista, no_t *no_removido);
 
-no_t* obtem_cauda(lista_enc_t* lista);
-
-void* remove_cabeca(lista_enc_t *lista);
-
-void* remove_cauda(lista_enc_t *lista);
-
-void* remove_elem(lista_enc_t* lista, int index);
-
-int tamanho (lista_enc_t *lista);
-
-int vazio(lista_enc_t* lista);
 
 #endif // LISTA_ENC_H_INCLUDED

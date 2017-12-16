@@ -4,9 +4,12 @@
 #include "lista_enc.h"
 #include "no.h"
 
-#define DEBUG
+#define FALSE 0
+#define TRUE 1
 
-struct lista_enc {
+//#define DEBUG
+
+struct listas_enc {
     no_t *cabeca;
     no_t *cauda;
     int tamanho;
@@ -28,7 +31,8 @@ lista_enc_t *cria_lista_enc (void) {
     return p;
 }
 
-void add_cauda(lista_enc_t *lista, void* elemento){
+void add_cauda(lista_enc_t *lista, no_t* elemento)
+{
     if (lista == NULL || elemento == NULL){
         fprintf(stderr,"add_cauda: ponteiros invalidos");
         exit(EXIT_FAILURE);
@@ -38,185 +42,200 @@ void add_cauda(lista_enc_t *lista, void* elemento){
    printf("Adicionando %p --- tamanho: %d\n", elemento, lista->tamanho);
    #endif // DEBUG
 
-   no_t* no = cria_no(elemento);
-
    //lista vazia
    if (lista->tamanho == 0)
    {
         #ifdef DEBUG
-        printf("add_cauda: add primeiro elemento: %p\n", no);
+        printf("add_cauda: add primeiro elemento: %p\n", elemento);
         #endif // DEBUG
 
-        lista->cauda = no;
-        lista->cabeca = no;
+        lista->cauda = elemento;
+        lista->cabeca = elemento;
         lista->tamanho++;
 
-        desliga_no(no);
+        desliga_no(elemento);
    }
    else {
         // Remove qualquer ligacao antiga
-        desliga_no(no);
+        desliga_no(elemento);
         // Liga cauda da lista com novo elemento
-        liga_nos(lista->cauda, no);
+        liga_nos(lista->cauda, elemento);
 
-        lista->cauda = no;
+        lista->cauda = elemento;
         lista->tamanho++;
    }
 }
 
-void add_cabeca(lista_enc_t *lista, void* elemento){
-    if (lista == NULL || elemento == NULL){
-        fprintf(stderr,"add_cabeca: ponteiros invalidos");
-        exit(EXIT_FAILURE);
-    }
+void imprimi_lista (lista_enc_t *lista)
+{
+    no_t *no = NULL;
 
-   #ifdef DEBUG
-   printf("Adicionando %p --- tamanho: %d\n", elemento, lista->tamanho);
-   #endif // DEBUG
-
-   no_t* no = cria_no(elemento);
-
-   //lista vazia
-   if (lista->tamanho == 0)
-   {
-        #ifdef DEBUG
-        printf("add_cabeca: add primeiro elemento: %p\n", no);
-        #endif // DEBUG
-
-        lista->cauda = no;
-        lista->cabeca = no;
-        lista->tamanho++;
-
-        desliga_no(no);
-   }
-   else {
-        liga_nos(no, lista->cabeca);
-
-        lista->cabeca = no;
-        lista->tamanho++;
-   }
-}
-
-no_t* obtem_cabeca(lista_enc_t* lista){
     if (lista == NULL){
-        fprintf(stderr,"add_cabeca: ponteiros invalidos");
+        fprintf(stderr,"imprimi_lista: ponteiros invalidos");
         exit(EXIT_FAILURE);
     }
 
-    return lista->cabeca;
+    no = lista->cabeca;
+
+    while (no){
+        printf("Dados: %p\n", obter_dado(no));
+
+        no = obtem_proximo(no);
+    }
 }
 
-no_t* obtem_cauda(lista_enc_t* lista){
+void imprimi_lista_tras (lista_enc_t *lista)
+{
+    no_t *no = NULL;
+
     if (lista == NULL){
-        fprintf(stderr,"add_cabeca: ponteiros invalidos");
+        fprintf(stderr,"imprimi_lista: ponteiros invalidos");
         exit(EXIT_FAILURE);
     }
 
-    return lista->cauda;
+    no = lista->cauda;
+
+    while (no){
+        printf("Dados: %p\n", obter_dado(no));
+
+        no = obtem_anterior(no);
+    }
 }
 
-void* remove_cabeca(lista_enc_t *lista){
-    if (lista == NULL){
-        fprintf(stderr, "remove_cabeca: ponteiro invalido");
-        exit(EXIT_FAILURE);
-    }
+int lista_vazia(lista_enc_t *lista)
+{
+	int ret;
 
-    no_t* no = lista->cabeca;
-    lista->cabeca = obtem_proximo(no);
+	(lista->tamanho == 0) ? (ret = TRUE) : (ret = FALSE);
 
-    if(no == NULL){
-        lista->cauda = NULL;
-    }
-
-    lista->tamanho--;
-    void* dado = obtem_dado(no);
-
-    free(no);
-
-    return dado;
+	return ret;
 }
 
-void* remove_cauda(lista_enc_t *lista){
-    if (lista == NULL){
-        fprintf(stderr, "remove_cauda: ponteiro invalido");
-        exit(EXIT_FAILURE);
-    }
+no_t *obter_cabeca(lista_enc_t *lista){
 
-    no_t* no = lista->cauda;
-    no_t* no_test = lista->cabeca;
+	if (lista == NULL){
+	        fprintf(stderr,"obter_cabeca: ponteiros invalidos");
+	        exit(EXIT_FAILURE);
+	    }
 
-    while(obtem_proximo(no_test) != no){
-        no_test = obtem_proximo(no_test);
-    }
-
-    lista->cauda = no_test;
-    desliga_no(no_test);
-    void* dado = obtem_dado(no);
-    lista->tamanho--;
-
-    free(no);
-
-    return dado;
+	return lista->cabeca;
 }
 
-void* remove_elem(lista_enc_t* lista, int index){
-    if (lista == NULL){
-        fprintf(stderr, "remove_elem: ponteiro invalido");
-        exit(EXIT_FAILURE);
-    }
+no_t *obter_cauda(lista_enc_t *lista){
 
-    if (index >= lista->tamanho || index < 0){
-        fprintf(stderr, "remove_elem: index invalido");
-        exit(EXIT_FAILURE);
-    }
+	if (lista == NULL){
+		fprintf(stderr,"obter_cabeca: ponteiros invalidos");
+		exit(EXIT_FAILURE);
+	}
 
-    if (index == 0){
-        return remove_cabeca(lista);
-    }
-
-    if (index == (lista->tamanho)-1){
-        return remove_cauda(lista);
-    }
-
-    int i = 1;
-    no_t* no_ant = lista->cabeca;
-    no_t* no     = obtem_proximo(no_ant);
-    while ( i < index){
-        no_ant = no;
-        no     = obtem_proximo(no_ant);
-
-        i++;
-    }
-
-    no_t* no_prox = obtem_proximo(no);
-
-    liga_nos(no_ant, no_prox);
-    lista->tamanho--;
-
-    void* dado = obtem_dado(no);
-    free(no);
-
-    return dado;
+	return lista->cauda;
 }
 
-int tamanho (lista_enc_t *lista){
-    if (lista == NULL){
-        fprintf(stderr, "tamanho: ponteiro invalido");
-        exit(EXIT_FAILURE);
-    }
+no_t *remover_cauda(lista_enc_t *lista)
+{
+	no_t *anterior;
+	no_t *removido;
 
-    return lista->tamanho;
+	if (lista == NULL){
+	    fprintf(stderr,"remover_cauda: ponteiro invalido");
+	    exit(EXIT_FAILURE);
+	}
+
+	if (lista->cauda == NULL)
+		return NULL;
+
+	removido = lista->cauda;
+
+	if (lista->cauda == lista->cabeca) {
+		lista->tamanho = 0;
+
+		lista->cauda = NULL;
+		lista->cabeca = NULL;
+
+		return removido;
+	}
+
+	anterior = obtem_anterior(lista->cauda);
+	desliga_no(removido);
+	lista->cauda = anterior;
+	desliga_no_proximo(anterior);
+	lista->tamanho--;
+
+	return removido;
 }
 
-int vazio(lista_enc_t* lista){
-    if (lista == NULL){
-        fprintf(stderr, "vazio: ponteiro invalido");
-        exit(EXIT_FAILURE);
-    }
+no_t *remover_cabeca(lista_enc_t *lista)
+{
+	no_t *proximo;
+	no_t *removido;
 
-    if (lista->tamanho == 0){
-        return 1;
-    }else{
-        return 0;
-    }
+	if (lista == NULL){
+	    fprintf(stderr,"remover_cauda: ponteiro invalido");
+	    exit(EXIT_FAILURE);
+	}
+
+	if (lista->cabeca == NULL)
+		return NULL;
+
+	removido = lista->cabeca;
+
+	if (lista->cauda == lista->cabeca) {
+		lista->tamanho = 0;
+
+		lista->cauda = NULL;
+		lista->cabeca = NULL;
+
+		return removido;
+	}
+
+	proximo = obtem_proximo(lista->cabeca);
+	desliga_no(removido);
+	lista->cabeca = proximo;
+	desliga_no_anterior(proximo);
+	lista->tamanho--;
+
+
+	return removido;
 }
+
+void *remover_no(lista_enc_t *lista, no_t *no_removido)
+{
+	no_t *meu_no;
+	void *dado;
+
+	no_t *proximo;
+	no_t *anterior;
+
+	if (lista == NULL || no_removido == NULL){
+		fprintf(stderr,"remover_no: ponteiro invalido");
+		exit(EXIT_FAILURE);
+	}
+
+	//Varre lista até encontrar nó
+	meu_no = obter_cabeca(lista);
+
+	while (meu_no){
+		dado = obter_dado(meu_no);
+
+		if (meu_no == no_removido){
+
+			if (meu_no == lista->cabeca)
+				remover_cabeca(lista);
+			else if (meu_no == lista->cauda)
+				remover_cauda(lista);
+			else
+			{
+				proximo = obtem_proximo(meu_no);
+				anterior = obtem_anterior(meu_no);
+				liga_nos(anterior, proximo);
+				lista->tamanho--;
+			}
+			free(meu_no);
+			break;
+		}
+		meu_no = obtem_proximo(meu_no);
+	}
+
+	return dado;
+}
+
