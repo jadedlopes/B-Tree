@@ -99,14 +99,18 @@ void libera_movies(lista_enc_t * lista) {
     free(lista);
 }
 
-int title_comp(movie_t* m1, movie_t* m2){
+int title_comp(void* v1, void* v2){
+    movie_t* m1 = v1;
+    movie_t* m2 = v2;
     int res;
     res = strcmp(m1->title, m2->title);
 
     return res;
 }
 
-int title_search_comp(char* str, movie_t* m){
+int title_search_comp(void* t_string, void* v){
+    char* str = t_string;
+    movie_t* m = v;
     char* aux;
     int ret;
 
@@ -120,7 +124,9 @@ int title_search_comp(char* str, movie_t* m){
 
 }
 
-int year_comp(movie_t* m1, movie_t* m2){
+int year_comp(void* v1, void* v2){
+    movie_t* m1 = v1;
+    movie_t* m2 = v2;
     int res;
 
     if (m1->year > m2->year){
@@ -134,7 +140,10 @@ int year_comp(movie_t* m1, movie_t* m2){
     return res;
 }
 
-int year_search_comp(int year, movie_t* m){
+int year_search_comp(void* y, void* v){
+    int year = (int)y;
+    movie_t* m = v;
+
     if (year < 100){
         if (year > 17){
             year = year + 1900;
@@ -152,7 +161,9 @@ int year_search_comp(int year, movie_t* m){
     }
 }
 
-int id_comp(movie_t* m1, movie_t* m2){
+int id_comp(void* v1, void* v2){
+    movie_t* m1 = v1;
+    movie_t* m2 = v2;
     int res;
 
     if (m1->id > m2->id){

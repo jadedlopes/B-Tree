@@ -6,7 +6,7 @@
 #include "btree.h"
 
 /*------------ Function declaration ------------------- */
-print_dot (btNode_t* node, FILE* arquivo);
+void print_dot (btNode_t* node, FILE* arquivo);
 /*----------------------------------------------------- */
 
 int main()
@@ -25,7 +25,7 @@ int main()
         no = obtem_proximo(no);
     }
 
-    print_dot(tree_title->raiz, fp);
+    print_dot(get_tree_root(tree_title), fp);
 
     //print_list_movies(lista, 10);
 
@@ -35,26 +35,26 @@ int main()
 
 void print_dot (btNode_t* node, FILE* arquivo) {
     if (node) {
-        if (!node->pai) {
+        if (!get_treeNode_father(node)) {
             fputs("graph{", arquivo);
         }
 
-        fprintf(arquivo, "n%p [label=%s", node, get_title(node->key[0]));
-        if (node->n > 1) {
-            fprintf(arquivo, " %s];\n", get_title(node->key[1]));
+        fprintf(arquivo, "n%p [label=%s", node, get_title(get_treeNode_key(node, 0)));
+        if (get_treeNode_size(node) > 1) {
+            fprintf(arquivo, " %s];\n", get_title(get_treeNode_key(node, 1)));
         } else {
             fputs("];", arquivo);
         }
 
-        if(node->pai) {
-            fprintf(arquivo,"%p -- %p;\n", node, node->pai);
+        if(get_treeNode_father(node)) {
+            fprintf(arquivo,"%p -- %p;\n", node, get_treeNode_father(node));
         }
 
-        print_dot(node->p[0], arquivo, title_func);
-        print_dot(node->p[1], arquivo, title_func);
-        print_dot(node->p[3], arquivo, title_func);
+        print_dot(get_treeNode_child(node, 0), arquivo);
+        print_dot(get_treeNode_child(node, 1), arquivo);
+        print_dot(get_treeNode_child(node, 2), arquivo);
 
-        if (!node->pai) {
+        if (!get_treeNode_father(node)) {
             fputs("}", arquivo);
         }
 
